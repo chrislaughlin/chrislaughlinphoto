@@ -2,16 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
 import Head from 'components/head';
-import Header from 'components/header';
 import GlobalStyle from 'global.css.js';
+import styled from 'styled-components';
+
+const StyledLayout = styled.div`
+  display: flex;
+  margin-top: 35px;
+`;
 
 const Layout = ({ data, children }) => (
-  <div>
+  <StyledLayout>
     <GlobalStyle />
     <Head />
-    <Header title={data.site.siteMetadata.siteTitle} />
     {children}
-  </div>
+  </StyledLayout>
 );
 
 Layout.propTypes = {

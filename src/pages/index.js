@@ -1,34 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Layout from 'components/layout';
-import Box from 'components/box';
-import Title from 'components/title';
 import Gallery from 'components/gallery';
-import IOExample from 'components/io-example';
-import Modal from 'containers/modal';
 import { graphql } from 'gatsby';
+import LogAndProfile from '../components/logoAndProfile/logoAndProfile';
 
-const Index = ({ data }) => (
-  <Layout>
-    <Box>
-      <Title as="h2" size="large">
-        {data.homeJson.content.childMarkdownRemark.rawMarkdownBody}
-      </Title>
-      <Modal>
-        <video
-          src="https://i.imgur.com/gzFqNSW.mp4"
-          playsInline
-          loop
-          autoPlay
-          muted
-        />
-      </Modal>
-    </Box>
-    <Gallery items={data.homeJson.gallery} />
-    <div style={{ height: '50vh' }} />
-    <IOExample />
-  </Layout>
-);
+const Index = ({ data }) => {
+  console.log(data);
+  const gallery = data.allInstaNode.edges.map(edge => {
+    return {
+      image: edge.node.localFile
+    }
+  })
+
+  return (
+    <Layout>
+      <LogAndProfile
+        logo={data.homeJson.gallery.find(img => img.title === 'Logo')}
+        profile={data.homeJson.gallery.find(img => img.title === 'Profile')}
+      />
+      <Gallery items={gallery} />
+    </Layout>
+  )
+};
 
 Index.propTypes = {
   data: PropTypes.object.isRequired,
@@ -39,24 +33,33 @@ export default Index;
 export const query = graphql`
   query HomepageQuery {
     homeJson {
-      title
-      content {
-        childMarkdownRemark {
-          html
-          rawMarkdownBody
-        }
-      }
       gallery {
         title
-        copy
         image {
           childImageSharp {
             fluid(maxHeight: 500, quality: 90) {
-              ...GatsbyImageSharpFluid_withWebp
+            ...GatsbyImageSharpFluid_withWebp
             }
           }
         }
       }
     }
+    allInstaNode {
+        edges {
+          node {
+            preview
+            original
+            timestamp
+            caption
+            localFile {
+              childImageSharp {
+                fluid(quality: 70, maxWidth: 600, maxHeight: 600) {
+                  ...GatsbyImageSharpFluid_withWebp
+                }
+              }
+            }
+          }
+        }
+      }
   }
 `;

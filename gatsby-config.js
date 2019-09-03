@@ -29,5 +29,12 @@ module.exports = {
         },
       },
     },
+    {
+      resolve: `gatsby-source-instagram`,
+      options: {
+        type: `hashtag`,
+        hashtag: `chrislaughlinphoto`,
+      },
+    },
   ],
 };
